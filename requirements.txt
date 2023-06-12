@@ -1,0 +1,7 @@
+langchain[llms]
+openai
+chromadb
+tiktoken
+docx2txt
+streamlit
+watchdog
