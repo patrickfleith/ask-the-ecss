@@ -9,13 +9,8 @@ from langchain.chains import RetrievalQAWithSourcesChain
 from langchain import OpenAI
 
 # ====================
-OPEN_API_KEY_FILEPATH = "openai_api_key.txt"
-# Read my api key and set it as environment variable
-with open(OPEN_API_KEY_FILEPATH) as f:
-    OPENAI_API_KEY = f.read()
-    
 
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+# os.environ["OPENAI_API_KEY"] = st.secrets["openai_api_key"]
 # ====================
 
 # Loading VectorStore and setup the QA with Source Chain
@@ -34,19 +29,23 @@ st.write("""
 Ask any questions over the Active ECSS Standards 
 (European Cooperation for Space Standardisation)""")
 
+query = st.text_area("Question:", value="")
 
-query = st.text_input("Type in your question", "")
+# query = st.text_input("Type in your question", "")
 
-with st.spinner('Wait for it...'):
-    result = chain(
-    {"question": query},
-    return_only_outputs=True,)
+if st.button('Submit'):
 
-st.success('Done!')
+    with st.spinner('Wait for it...'):
+        result = chain(
+            {"question": query},
+            return_only_outputs=True,)
 
-st.write(result['sources'])
-st.write(result['answer'])
+        st.success('Done!')
 
-with st.expander("See explanation"):
-    for doc in result['source_documents']:
-        st.write(doc.page_content)
+        st.write(result['sources'])
+
+        st.write(result['answer'])
+
+        with st.expander("See explanation"):
+            for doc in result['source_documents']:
+                st.write(doc.page_content)
